@@ -280,7 +280,8 @@ belong to a different block, on the other side of a gap."
            with prev = nil
            with first-p = t
            do (when (slack-buffer-visible-message-p this m)
-                (slack-buffer-insert this m t prev first-p)
+                (let ((lui-time-stamp-position nil))
+                  (slack-buffer-insert this m t prev first-p))
                 (setq prev m
                       first-p nil)))
   (slack-if-let* ((oldest (car messages)))

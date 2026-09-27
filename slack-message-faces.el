@@ -43,6 +43,16 @@
   "Face used to text message."
   :group 'slack)
 
+(defface slack-message-timestamp
+  '((t ()))
+  "Face used for message timestamp."
+  :group 'slack)
+
+(defface slack-message-date
+  '((t (:inherit italic)))
+  "Face used for message date."
+  :group 'slack)
+
 (defface slack-message-output-reaction
   '((t (:box (:line-width 1 :style released-button))))
   "Face used to reactions."

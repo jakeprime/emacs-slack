@@ -261,6 +261,7 @@
   (let* ((name (slack-message-sender-name this team))
          (user-id (slack-message-sender-id this))
          (name (slack-user-vip-propertize-name name user-id team))
+         (timestamp (slack-message-time-stamp this))
          (status (slack-message-user-status this team))
          (edited-at (slack-format-ts (slack-message-edited-at this)))
          (deleted-at (slack-format-ts (oref this deleted-at))))
@@ -294,19 +295,14 @@
                             (define-key
                              map (kbd "RET")
                              go-to-user)
-                            map))
-              (if (slack-string-blankp status)
-                  ""
-                (concat " " status))
-              (if deleted-at
-                  (concat " deleted_at: " deleted-at)
-                "")
-              (if edited-at
-                  (concat " edited_at: " edited-at)
-                "")))
-            (if (slack-message-starred-p this)
-                " :star:"
-              ""))))
+                            map))))
+            (propertize
+             (format " %s" (format-time-string "%H:%M" timestamp))
+             'face 'slack-message-timestamp)
+            (propertize
+             (format " %s" (format-time-string "%a %e %b" timestamp))
+             'face 'slack-message-date))))
+
 
 (cl-defmethod slack-message-starred-p ((m slack-message))
   (oref m is-starred))
