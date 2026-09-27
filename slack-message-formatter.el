@@ -54,6 +54,9 @@
     (define-key keymap [mouse-1] #'slack-reaction-toggle)
     keymap))
 
+(defvar slack-message-margin
+  (propertize " " 'display '(space :width 5)))
+
 (cl-defgeneric slack-buffer-toggle-reaction (buffer reaction))
 
 (defun slack-reaction-toggle ()
@@ -106,15 +109,30 @@
     (propertize
      (slack-format-message (propertize header
                                        'slack-message-header t)
-                           (if (oref m deleted-at)
-                               (slack-message-put-deleted-property body)
-                             body)
-                           files
-                           attachment
-                           (if (slack-string-blankp reactions) reactions
-                             (concat "\n" reactions))
-                           (if (slack-string-blankp thread) thread
-                             (concat "\n" thread)))
+                           (propertize
+                            (if (oref m deleted-at)
+                                (slack-message-put-deleted-property body)
+                              body)
+                            'line-prefix slack-message-margin
+                            'wrap-prefix slack-message-margin)
+                           (propertize
+                            files
+                            'line-prefix slack-message-margin
+                            'wrap-prefix slack-message-margin)
+                           (propertize
+                            attachment
+                            'line-prefix slack-message-margin
+                            'wrap-prefix slack-message-margin)
+                           (propertize
+                            (if (slack-string-blankp reactions) reactions
+                              (concat "\n" reactions))
+                            'line-prefix slack-message-margin
+                            'wrap-prefix slack-message-margin)
+                           (propertize
+                            (if (slack-string-blankp thread) thread
+                              (concat "\n" thread))
+                           'line-prefix slack-message-margin
+                            'wrap-prefix slack-message-margin))
      'permalink (oref m permalink))))
 
 (cl-defmethod slack-file-deleted-p ((file slack-file))

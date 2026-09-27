@@ -270,6 +270,10 @@
                 (concat (propertize "image" 'display image 'face 'slack-profile-image-face)
                         " ")
               "")
+            (propertize
+             (format "%s " (format-time-string "%H:%M" timestamp))
+             'face 'slack-message-timestamp)
+            (propertize "" 'line-prefix slack-message-margin)
             (slack-message-put-header-property
              (concat
               ;; make the user name clickable to navigate to the user profile
@@ -295,13 +299,7 @@
                             (define-key
                              map (kbd "RET")
                              go-to-user)
-                            map))))
-            (propertize
-             (format " %s" (format-time-string "%H:%M" timestamp))
-             'face 'slack-message-timestamp)
-            (propertize
-             (format " %s" (format-time-string "%a %e %b" timestamp))
-             'face 'slack-message-date))))
+                            map)))))))
 
 
 (cl-defmethod slack-message-starred-p ((m slack-message))
@@ -318,11 +316,12 @@
                          (or (oref m blocks)
                              (when-let* ((first-attachment (car (oref m attachments))))
                                (oref first-attachment blocks))))))
-      (slack-unescape (mapconcat #'(lambda (bl)
+      (propertize
+       (slack-unescape (mapconcat #'(lambda (bl)
                                      (slack-block-to-string bl (list :team team)))
                                  blocks
                                  "\n\n")
-                      team)
+                      team))
     (if (oref m text)
         (propertize (slack-unescape (oref m text) team)
                     'face 'slack-message-output-text
