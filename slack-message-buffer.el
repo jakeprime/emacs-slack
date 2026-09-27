@@ -760,7 +760,12 @@ history sitting under a gap marker."
          (prev (unless no-merge-p
                  (or prev-message (slack-buffer-prev-message this message))))
          (merge-message-p (slack-buffer-merge-message-p this message prev))
-         (text (slack-buffer-message-text this message merge-message-p)))
+         (text (slack-buffer-message-text this message merge-message-p))
+         (date (format "%s " (format-time-string "%A, %e %B" (slack-message-time-stamp message))))
+         (prev-date
+          (and prev-message
+               (format "%s "
+                       (format-time-string "%A, %e %B" (slack-message-time-stamp prev-message))))))
     (when merge-message-p
       (save-excursion
         (goto-char lui-output-marker)
@@ -773,6 +778,10 @@ history sitting under a gap marker."
                                         return i)))
             (delete-region (1+ prev-message-end)
                            (marker-position lui-output-marker)))))
+    (if (not (equal date prev-date))
+        (lui-insert-with-text-properties
+         (format "%s" date)
+         'face 'slack-message-date))
     (lui-insert-with-text-properties
      text
      'merged-message-p merge-message-p
