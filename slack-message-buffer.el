@@ -133,6 +133,7 @@
   (add-hook 'lui-pre-output-hook 'slack-handle-lazy-conversation-name nil t)
   ;; TODO move to `slack-room-buffer' ?
   (cursor-sensor-mode)
+  (hl-line-mode -1)
   (setq-local lui-max-buffer-size nil))
 
 (defclass slack-message-buffer (slack-room-buffer)
