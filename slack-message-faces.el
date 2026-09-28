@@ -36,11 +36,10 @@
   :group 'slack)
 
 (defface slack-message-output-header
-  '((t (:foreground "#FFA000"
+  '((t (:inherit font-lock-constant-face
         :weight bold
-        :height 1.0
-        :underline t)))
-  "Face used to text message."
+        :height 1.2)))
+  "Face used for message author."
   :group 'slack)
 
 (defface slack-message-timestamp
@@ -49,7 +48,8 @@
   :group 'slack)
 
 (defface slack-message-date
-  '((t (:inherit italic)))
+  '((t (:inherit highlight
+        :extend t)))
   "Face used for message date."
   :group 'slack)
 
